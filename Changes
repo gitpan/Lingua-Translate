@@ -1,0 +1,4 @@
+Revision history for Perl extension Lingua::Translate.
+
+0.01  Wed Jan 16 09:58:53 2002
+    - Initial release to CPAN.  Babelfish backend only.

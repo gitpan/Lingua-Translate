@@ -1,0 +1,8 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+lib/Lingua/Translate.pm
+lib/Lingua/Translate/Babelfish.pm
+t/01-babelfish.t
+t/02-translate.t

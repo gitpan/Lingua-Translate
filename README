@@ -1,0 +1,48 @@
+Lingua::Translate version 0.01
+==============================
+
+This module performs natural language translation using Babelfish
+(http://altavista.babelfish.com/) or Systran (http://www.systran.org/)
+
+If the test suite fails, it may be because Babelfish is overloaded or
+down.  I will be including a better test program at some near point in
+the future that does not have this problem.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+Core Functionality:
+   Pod::Constants, 0.12 or later.
+
+Lingua::Translate::Babelfish backend:
+   HTML::TokeParser
+   LWP::UserAgent
+
+Test suite functionality
+   Unicode::MapUTF8 (highly recommended)
+   
+I have uploaded Pod::Constants 0.12 to CPAN, but unfortunately the
+CPAN module is still not installing that version.  The latest version
+of Pod::Constants is available at http://sam.vilain.net/pm/
+
+Unicode::MapUTF8 isn't actually required for module operation, but you
+will need it to run the test suite.  You should also be converting
+your strings to be translated to UTF-8 before sending them to
+Babelfish.  This module is the only sane approach to managing UTF8
+that I have found under Perl 5.6, so I would call it a pre-requisite.
+
+COPYRIGHT AND LICENCE
+
+Copyright (c) 2002, Sam Vilain.  All rights reserved.  This module is
+free software; you may use it under the same terms as Perl itself.
+
