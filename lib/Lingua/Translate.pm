@@ -205,13 +205,10 @@ sub config {
 	if ( $option eq "back_end" ) {
 
 	    # the user is selecting a back end.  Load it
-	    load_back_end($value);
-
-	    # set the package variable
-	    $$our_back_end = $value;
+	    $$our_back_end = load_back_end($value);
 
 	} elsif (
-		 my $code_ref = UNIVERSAL::can($our_back_end,"config")
+		 my $code_ref = UNIVERSAL::can($$our_back_end,"config")
 		) {
 
 	    # call the back-end's configuration function
@@ -271,7 +268,11 @@ No mechanism for backends registering which language pairs they have
 along with a priority, so that the most efficient back-end for a
 translation can be selected automatically.
 
-Some much shorter invocation rules, suitable for one liners, etc
+Some much shorter invocation rules, suitable for one liners, etc.
+
+No character set management; for instance, the Babelfish back-end uses
+UTF8, but the SysTran back-end uses ISO-8859-1.  The way I envisage
+this working is that all backends must use UTF8.
 
 =head1 SEE ALSO
 

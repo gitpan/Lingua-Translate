@@ -166,7 +166,7 @@ sub translate {
 			 'urltext' => $chunk,
 			 'lp' => join("_", @{$self}{qw(src dest)}),
 			 'Submit' => 'Translate',
-			 'enc' => 'utf8',         # no it ain't :-)
+			 'enc' => 'utf8',
 			]);
 
     RETRY:
@@ -424,6 +424,7 @@ __END__
 
 =head1 BUGS/TODO
 
+Strings are sent and received in UTF8 without any processing.
 
 =head1 SEE ALSO
 

@@ -1,12 +1,14 @@
-Lingua::Translate version 0.01
+Lingua::Translate version 0.02
 ==============================
 
 This module performs natural language translation using Babelfish
 (http://altavista.babelfish.com/) or Systran (http://www.systran.org/)
 
-If the test suite fails, it may be because Babelfish is overloaded or
-down.  I will be including a better test program at some near point in
-the future that does not have this problem.
+If the test suite (`make test') fails, it may be because Babelfish is
+overloaded, down or unreachable.  I'm in two minds as to whether or
+not this is a bug :-).  Given that most users won't have a configured
+SysTran server available, the test script for that works in a
+different way and doesn't have the same problem.
 
 INSTALLATION
 
@@ -28,6 +30,9 @@ Lingua::Translate::Babelfish backend:
    HTML::TokeParser
    LWP::UserAgent
 
+Lingua::Translate::SysTran backend:
+   IO::Socket::INET (standard)
+
 Test suite functionality
    Unicode::MapUTF8 (highly recommended)
    
@@ -45,4 +50,3 @@ COPYRIGHT AND LICENCE
 
 Copyright (c) 2002, Sam Vilain.  All rights reserved.  This module is
 free software; you may use it under the same terms as Perl itself.
-
