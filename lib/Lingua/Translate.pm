@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use vars qw($VERSION $defaults);
-$VERSION = '0.05';
+$VERSION = '0.07';
 
 =head1 NAME
 
@@ -380,7 +380,7 @@ Sam Vilain, <enki@snowcra.sh>
 
 =head1 MODULE RELEASE
 
-This is Lingua::Translate, version 0.06
+This is Lingua::Translate, version 0.07
 
 =head2 DEPENDENCIES
 
@@ -391,7 +391,6 @@ This module requires the following modules and versions:
    HTML::TokeParser => 2.19
    I18N::LangTags   => 0.27
    Unicode::MapUTF8 => 1.09
-
 
 =cut
 

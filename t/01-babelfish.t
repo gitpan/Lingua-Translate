@@ -23,4 +23,4 @@ eval {
     fail("Translation with bad URI didn't die");
 };
 
-like($@, qr/Bad hostname/, "dies with bad URI");
+like($@, qr/Bad hostname|Request timed out/, "dies with bad URI");

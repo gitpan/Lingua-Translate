@@ -1,3 +1,9 @@
+liblingua-translate-perl (0.07) unstable; urgency=low
+
+  * support for new Babelfish site (sorry for the delay)
+
+ -- Sam Vilain <sam@vilain.net>  Wed, 17 Nov 2004 10:46:40 +1300
+
 liblingua-translate-perl (0.06) unstable; urgency=low
 
   * Fix bug in Makefile.PL

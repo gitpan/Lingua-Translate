@@ -13,7 +13,5 @@ debian/README.Debian
 debian/changelog
 debian/control
 debian/copyright
-debian/liblingua-translate-perl.postinst.debhelper
-debian/liblingua-translate-perl.prerm.debhelper
-debian/liblingua-translate-perl.substvars
 debian/rules
+META.yml                                 Module meta-data (added by MakeMaker)

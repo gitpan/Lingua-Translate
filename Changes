@@ -1,5 +1,8 @@
 Revision history for Perl extension Lingua::Translate.
 
+0.07  Wed Nov 17 10:46:49 NZDT 2004
+    - Now supports new Babelfish site design
+
 0.06  Mon Jun 17 19:12:45 BST 2002
     - No real changes, just cleaning up the build system so it passes
       CPANTS testing, etc.

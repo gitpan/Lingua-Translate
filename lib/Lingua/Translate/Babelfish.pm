@@ -36,7 +36,7 @@ Lingua::Translate::Babelfish - Translation back-end for Altavista's
      (
        backend => "Babelfish",
        babelfish_uri =>
-           'http://babelfish.altavista.com/raging/translate.dyn?',
+           'http://babelfish.altavista.com/tr?',
        ua => LWP::UserAgent->new(),
      );
 
@@ -163,11 +163,15 @@ sub translate {
 	my $req = POST ($self->{babelfish_uri},
 			[
 			 'doit' => 'done',
-			 'urltext' => $chunk,
+			 'intl' => '1',
+			 #'tt' => 'urltext',
+			 'trtext' => $chunk,
 			 'lp' => join("_", @{$self}{qw(src dest)}),
 			 'Submit' => 'Translate',
 			 'enc' => 'utf8',
 			]);
+
+	$req->header("Accept-Charset", "utf-8");
 
     RETRY:
 	# try several times to reach babelfish
@@ -178,7 +182,7 @@ sub translate {
 
 	    if( $res->is_success ){
 
-		my $output = $self->_extract_text($res->as_string);
+		my $output = $self->_extract_text($res->as_string, $res->header("Content-Type"));
 
 		# Reject outputs that are too useless.
 		next RETRY if $output =~ /^\*\*time-out\*\*|^&nbsp;$/;
@@ -207,34 +211,27 @@ sub translate {
 
 }
 
-use HTML::TokeParser;
+use Unicode::MapUTF8 qw(to_utf8);
 
 # Extract the text from the html we get back from babelfish and return
-# it (keying on the fact that it's the first thing after a <br> tag,
-# possibly removing a textarea tag after it).
+# it.  It seems that SysTrans are really trying to make this hard to
+# screen scrape, oh well.
 sub _extract_text {
-    my($self, $html) = @_;
+    my($self, $html, $contenttype) = @_;
 
-    my $p = HTML::TokeParser->new(\$html);
-    my ($tag,$token);
-    my $text="";
+    my ($translated) =
+	($html =~ m{<td \s bgcolor=white[^>]*>
+		    (?:<div \s style=padding:10px;>)?
+		    ([^<]*)</}xs)
+	    or die "Babelfish response unparsable, brain needed";
 
-    if ($tag = $p->get_tag('br')) {
-        while ($token = $p->get_token) {
-            next if shift(@{$token}) ne "T";
-            $text = shift(@{$token});
+    my ($encoding) = ($contenttype =~ m/charset=(\S*)/);
 
-            #$text =~ s/[\r\n]//g;
-            # This patch for whitespace handling from Olivier Scherler
-            $text =~ s/[\r\n]/ /g;
-            $text =~ s/^\s*//;
-            $text =~ s/\s+/ /g;
-            $text =~ s/\s+$//;
-
-            last if defined($text) and $text ne "";
-        }
+    if ( $encoding =~ /^utf-?8$/i ) {
+	return $translated
+    } else {
+	return to_utf8({ -string => $translated, -charset => $encoding });
     }
-    return $text;
 }
 
 =head2 available() : @list
@@ -374,7 +371,7 @@ sub config {
 The uri to use when contacting Babelfish.
 
 The default value is
-"http://babelfish.altavista.com/raging/translate.dyn?"
+"http://babelfish.altavista.com/tr?"
 
 =item agent
 
