@@ -1,4 +1,4 @@
-Lingua::Translate version 0.05
+Lingua::Translate version 0.06
 ==============================
 
 This module performs natural language translation using Babelfish
@@ -25,7 +25,7 @@ To build this tarball into a debian package:
 
  3. Install the generated package
 
-    dpkg -i ../liblingua-translate-perl_0.05_all.deb
+    dpkg -i ../liblingua-translate-perl_0.06_all.deb
 
 INSTALLATION ON OTHER SYSTEMS
 

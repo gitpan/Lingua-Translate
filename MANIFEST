@@ -1,5 +1,6 @@
 Changes
 Makefile.PL
+Makefile.cfg
 MANIFEST
 README
 lib/Lingua/Translate.pm

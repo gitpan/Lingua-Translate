@@ -1,5 +1,9 @@
 Revision history for Perl extension Lingua::Translate.
 
+0.06  Mon Jun 17 19:12:45 BST 2002
+    - No real changes, just cleaning up the build system so it passes
+      CPANTS testing, etc.
+
 0.05  Wed Jun  5 09:55:52 BST 2002
     - Added call to LWP::UserAgent->env_proxy() to automatically pick
       up firewall configuration specified in environment.  Spotted by

@@ -378,6 +378,21 @@ J. Urist <durist@world.std.com>
 
 Sam Vilain, <enki@snowcra.sh>
 
+=head1 MODULE RELEASE
+
+This is Lingua::Translate, version 0.06
+
+=head2 DEPENDENCIES
+
+This module requires the following modules and versions:
+
+   LWP::UserAgent   => 1.73
+   Pod::Constants   => 0.15
+   HTML::TokeParser => 2.19
+   I18N::LangTags   => 0.27
+   Unicode::MapUTF8 => 1.09
+
+
 =cut
 
 4;
