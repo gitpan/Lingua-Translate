@@ -1,5 +1,9 @@
 Revision history for Perl extension Lingua::Translate.
 
+0.03  Tue Apr  9 17:45:22 BST 2002
+    - Added character set support
+    - Now compatible with perl 5.005
+
 0.02  Wed Jan 30 09:32:41 GMT 2002
     - Added SysTran backend.
 

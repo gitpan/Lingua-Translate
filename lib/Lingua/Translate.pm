@@ -5,8 +5,8 @@ package Lingua::Translate;
 use strict;
 use Carp;
 
-use vars qw($VERSION $back_end);
-$VERSION = '0.01';
+use vars qw($VERSION $defaults);
+$VERSION = '0.03';
 
 =head1 NAME
 
@@ -66,7 +66,7 @@ do not overload Babelfish.
 
 # I'm not sure whether the "src", "dest" options should be hard coded
 # like this.  Perhaps they should just be treated as configuration
-# options.  But I think they're necessary.
+# options.  But I think they deserve special treatment.
 
 =head2 new(src => $lang, dest => $lang)
 
@@ -95,6 +95,15 @@ as well.
 
 use I18N::LangTags qw(is_language_tag);
 
+# HACK to do without Unicode::MapUTF8, as it can be very hard to
+# install, particularly on older Perls
+use vars qw($have_map_utf8);
+BEGIN {
+    eval "use Unicode::MapUTF8 qw(from_utf8 to_utf8 "
+	."utf8_supported_charset);";
+    $have_map_utf8 = 1 unless $@;
+}
+
 sub new {
     my $class = shift;
     my %options = @_;
@@ -112,17 +121,33 @@ sub new {
 
     # allow custom back end
     $self->{back_end} = load_back_end(delete $options{back_end}
-				      || $back_end);
+				      || $defaults->{back_end});
+
+    # allow encoding
+    for my $option ( qw(src_enc dest_enc) ) {
+	$self->config($option => delete $options{$option})
+	    if (exists $options{$option});
+    }
+
+    $self->{back_end_options} = \%options if (keys %options);
+
+    bless $self, $class;
+}
+
+# creates the $self->{worker} attribute
+
+sub _create_worker {
+
+    my $self = shift;
 
     # For flexibility, we allow two methods of configuration; if
     # the module defines &save_config(), then we call that
     # function, then call config(%options), new(), then
     # &restore_config().
-    # list.
-    if ( keys %options and
+    if ( $self->{back_end_options} and
 	 my $code_ref = $self->{back_end}->can("save_config") ) {
 	my $saved_config = $code_ref->();
-	$self->{back_end}->config(%options);
+	$self->{back_end}->config(%{$self->{back_end_options}});
 	$self->{worker} =
 	    $self->{back_end}->new( src => $self->{src},
 				    dest => $self->{dest} );
@@ -134,10 +159,10 @@ sub new {
 	$self->{worker} =
 	    $self->{back_end}->new( src => $self->{src},
 				    dest => $self->{dest},
-				    %options );
+				    %{$self->{back_end_options}||{}}
+				  );
     }
 
-    bless $self, $class;
 }
 
 =head1 METHODS
@@ -151,7 +176,33 @@ Translates $text and returns the translated text.  die on any error.
 sub translate {
     my ($self, $text) = map { shift } (1..2);
 
-    return $self->{worker}->translate($text);
+    my $source_encoding = $self->{src_enc} || $defaults->{src_enc};
+
+    # BACK-ENDS MUST DEAL IN utf8
+    if ( $have_map_utf8 and lc($source_encoding) ne "utf8" ) {
+	$text = to_utf8( -string => $text,
+			 -charset => $source_encoding);
+    }
+
+    # create a new worker if we need to
+    $self->_create_worker unless $self->{worker};
+
+    my $translated;
+    for (1..3) {
+        eval { $translated = $self->{worker}->translate($text) };
+        last unless $@;
+    }
+
+    if ( $translated ) {
+	my $dest_encoding = $self->{dest_enc} || $defaults->{dest_enc};
+	if ( $have_map_utf8 and lc($dest_encoding) ne "utf8" ) {
+	    $translated = from_utf8( -string => $translated,
+				     -charset => $dest_encoding);
+	}
+	return $translated;
+    } else {
+	die "Translation back-end failed; $@";
+    }
 }
 
 =head1 CONFIGURATION FUNCTIONS
@@ -185,19 +236,18 @@ sub load_back_end {
 
 =head2 config(option => $value)
 
-This function sets defaults for use when constructing objects.
+This function sets defaults for use when constructing new objects; it
+does not affect already constructed objects.
 
 =cut
 
 sub config {
 
-    my ($self, $our_back_end);
+    my ($self, $target);
     if ( UNIVERSAL::isa($_[0], __PACKAGE__) ) {
 	$self = shift;
-	my $be = ref $self;
-	$our_back_end = \$be;
     } else {
-	$our_back_end = \$back_end;
+	$self = $defaults ||= {};
     }
 
     while ( my ($option, $value) = splice @_, 0, 2 ) {
@@ -205,10 +255,32 @@ sub config {
 	if ( $option eq "back_end" ) {
 
 	    # the user is selecting a back end.  Load it
-	    $$our_back_end = load_back_end($value);
+	    $self->{back_end} = load_back_end($value);
+
+	    # if there is a worker, kill it - it will be re-created on
+	    # the next translate() call.
+	    delete $self->{worker};
+
+	} elsif ( $option eq "src_enc" ) {
+	    # set the source encoding
+
+	    croak "Charset `$value' not supported by Unicode::MapUTF8"
+		if ($have_map_utf8 and
+		    not utf8_supported_charset($value));
+
+	    $self->{src_enc} = $value;
+
+	} elsif ( $option eq "dest_enc" ) {
+
+	    croak "Charset `$value' not supported by Unicode::MapUTF8"
+		if ($have_map_utf8 and
+		    not utf8_supported_charset($value));
+
+	    $self->{dest_enc} = $value;
 
 	} elsif (
-		 my $code_ref = UNIVERSAL::can($$our_back_end,"config")
+		 my $code_ref = UNIVERSAL::can ($self->{back_end},
+					       "config")
 		) {
 
 	    # call the back-end's configuration function
@@ -256,6 +328,23 @@ If the configuration option requested is not found, and a back-end is
 configured, then that back-end's config function is called with the
 options.
 
+=item src_enc
+
+Character set encoding assumed for input text.  If the
+C<Unicode::MapUTF8> module is not available, this option has no effect
+and strings are passed on to the translation back end without
+processing.
+
+The default value is "utf8".
+
+=item dest_enc
+
+Character set encoding assumed for returned text.  If the
+C<Unicode::MapUTF8> module is not available, this option has no effect
+and strings are passed back from the translation back end as is.
+
+The default value is "utf8".
+
 =back
 
 This function can also be called as an instance method (ie
@@ -270,9 +359,12 @@ translation can be selected automatically.
 
 Some much shorter invocation rules, suitable for one liners, etc.
 
-No character set management; for instance, the Babelfish back-end uses
-UTF8, but the SysTran back-end uses ISO-8859-1.  The way I envisage
-this working is that all backends must use UTF8.
+I don't have access to a non-European character set version of
+SysTran, so translation to/from non-ISO-8859-1 character sets is not
+currently possible.
+
+Need to formalise and define the "Interface" that the back-end modules
+adhere to.
 
 =head1 SEE ALSO
 

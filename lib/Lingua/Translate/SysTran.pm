@@ -31,7 +31,7 @@ Lingua::Translate::SysTrans - Translation back-end for SysTran's
 
  Lingua::Translate::config
      (
-       backend => "SysTran",
+       back_end => "SysTran",
        host => "babelfish.mydomainname.com",
      );
 
@@ -124,13 +124,23 @@ Translates the given text.  die's on any kind of error.
 =cut
 
 use IO::Socket;
+BEGIN {
+    # use Unicode::MapUTF8 if it is available
+    eval "use Unicode::MapUTF8 qw(from_utf8 to_utf8);";
+    if ( $@ ) {
+	eval 'no strict; sub from_utf8 { %a=(@_); $a{"-string"} } '.
+	    '*{to_utf8} = \&from_utf8';
+    }
+};
 
 sub translate {
     my $self = shift;
     UNIVERSAL::isa($self, __PACKAGE__)
 	    or croak __PACKAGE__."::translate() called as function";
 
-    my $text = shift;
+    # every back-end we know of speaks ISO-8859-1
+    my $text = from_utf8( -string => (shift),
+			  -charset => "iso-8859-1" );
 
     my $translated;
 
@@ -146,13 +156,14 @@ sub translate {
 	 Proto    => 'tcp',
 	 PeerAddr => $self->{host},
 	 PeerPort => $self->{port},
+	 Reuse    => 1,
 	);
 
-    $self->_barf("Connection failed") unless $socket;
+    $self->_barf("Connection failed; $!") unless $socket;
 
     ## Sending request
     $socket->write($request, length($request))
-	|| $self->_barf ('write failed');
+	|| $self->_barf ('write failed; '.$!);
 
     $socket->flush;
 
@@ -187,7 +198,8 @@ sub translate {
     # trim excess line feeds at end of string
     $translated =~ s/\n*$//;
 
-    return $translated;
+    return to_utf8( -string => $translated,
+		    -charset => "iso-8859-1" );
 }
 
 sub _barf {
@@ -229,8 +241,6 @@ sub available {
 }
 
 =head1 CONFIGURATION FUNCTIONS
-
-Configure your mo
 
 =head2 config(option => $value)
 
@@ -352,8 +362,8 @@ use Pod::Constants
 
 =head1 BUGS/TODO
 
-No character set conversion is performed.  Strings are sent and
-received in ISO-8859-1 by the European backend.
+No support for non-ISO-8859-1 character sets - with the software I
+have, there is no option.
 
 =head1 SEE ALSO
 

@@ -1,4 +1,4 @@
-Lingua::Translate version 0.02
+Lingua::Translate version 0.03
 ==============================
 
 This module performs natural language translation using Babelfish
@@ -24,7 +24,8 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
 Core Functionality:
-   Pod::Constants, 0.12 or later.
+   Pod::Constants, 0.15 or later.
+   Unicode::MapUTF8
 
 Lingua::Translate::Babelfish backend:
    HTML::TokeParser
@@ -33,18 +34,10 @@ Lingua::Translate::Babelfish backend:
 Lingua::Translate::SysTran backend:
    IO::Socket::INET (standard)
 
-Test suite functionality
-   Unicode::MapUTF8 (highly recommended)
-   
-I have uploaded Pod::Constants 0.12 to CPAN, but unfortunately the
-CPAN module is still not installing that version.  The latest version
-of Pod::Constants is available at http://sam.vilain.net/pm/
-
-Unicode::MapUTF8 isn't actually required for module operation, but you
-will need it to run the test suite.  You should also be converting
-your strings to be translated to UTF-8 before sending them to
-Babelfish.  This module is the only sane approach to managing UTF8
-that I have found under Perl 5.6, so I would call it a pre-requisite.
+The module will cope without Unicode::MapUTF8, but no attempt will be
+made to convert strings passed to and from the back end - the
+Babelfish back-end uses UTF-8, whereas the SysTran back-end uses
+ISO-8859-1.
 
 COPYRIGHT AND LICENCE
 

@@ -2,11 +2,11 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     'NAME'		=> 'Lingua::Translate',
-    'VERSION'	        => 0.02,
+    'VERSION'	        => 0.03,
     'PREREQ_PM'		=> {
-			    LWP::UserAgent => 2,
-			    Pod::Constants => 0.12,
-			    HTML::TokeParser => 2.24,
+			    LWP::UserAgent => 1.73,
+			    Pod::Constants => 0.15,
+			    HTML::TokeParser => 2.19,
 			    Unicode::MapUTF8 => 1.09,
 			   },
     ($] >= 5.005 ?

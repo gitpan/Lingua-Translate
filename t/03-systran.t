@@ -8,14 +8,18 @@ if (my $pid = fork()) {
     # happen
     eval "use Test::More tests => 3;";
 
-    use_ok("Lingua::Translate::SysTran");
+    use_ok("Lingua::Translate");
 
-    my $translator = Lingua::Translate::SysTran->new( src => "fr",
-						      dest => "de" );
+    Lingua::Translate::config(back_end => "SysTran",
+			      dest_enc => "iso-8859-1",
+			      src_enc => "iso-8859-1");
 
-    ok( UNIVERSAL::isa( $translator, "Lingua::Translate::SysTran" ),
+    my $translator = Lingua::Translate->new( src => "fr",
+					     dest => "de");
+
+    ok( UNIVERSAL::isa( $translator, "Lingua::Translate" ),
 	"Lingua::Translate::SysTran->new()" );
-    
+
     is( $translator->translate("Merde"), "Scheiße",
 	"Lingua::Translate::SysTran->translate()"   );
 
@@ -62,9 +66,11 @@ if (my $pid = fork()) {
 		$translated = "Ich verstehe nicht was Sie sagen";
 	    }
 
-	    $newsocket->write("ERR=0\nTIME=00:00:01\n"
-			      ."OUTPUT-CONTENT=".length($translated)
-			      ."\n$translated\n");
+	    my $to_write = ("ERR=0\nTIME=00:00:01\n"
+			    ."OUTPUT-CONTENT=".length($translated)
+			    ."\n$translated\n");
+
+	    $newsocket->write($to_write, length $to_write);
 	    $newsocket->flush();
 	    $newsocket->close();
 	}
