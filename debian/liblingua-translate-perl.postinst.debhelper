@@ -1,0 +1,7 @@
+# Automatically added by dh_installdocs
+if [ "$1" = "configure" ]; then
+	if [ -d /usr/doc -a ! -e /usr/doc/liblingua-translate-perl -a -d /usr/share/doc/liblingua-translate-perl ]; then
+		ln -sf ../share/doc/liblingua-translate-perl /usr/doc/liblingua-translate-perl
+	fi
+fi
+# End automatically added section

@@ -1,0 +1,18 @@
+Source: liblingua-translate-perl
+Section: interpreters
+Priority: optional
+Build-Depends: debhelper (>= 3.0.5), perl (>= 5.6.0-17)
+Maintainer: Sam Vilain <enki@snowcra.sh>
+Standards-Version: 3.5.1
+
+Package: liblingua-translate-perl
+Architecture: all
+Depends: ${perl:Depends}, libwww-perl (>= 5.64-1), libpod-constants-perl (>= 0.15-1), libhtml-parser-perl (>= 3.25-1), libunicode-maputf8-perl (>= 1.09-2)
+Description:  Translate text from one language to another
+ Locale::Translate translates text from one written language to
+ another.  Currently this is implemented by contacting Babelfish
+ (http://babelfish.altavista.com/), so see there for the language pairs
+ that are supported.  Babelfish uses SysTran (http://www.systran.org/)
+ to perform the translation, and contacting a SysTran translation
+ server directly is also supported (in case your translation needs grow
+ beyond babelfish' capacity).

@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use vars qw($VERSION $defaults);
-$VERSION = '0.03';
+$VERSION = '0.05';
 
 =head1 NAME
 

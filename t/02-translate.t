@@ -18,7 +18,7 @@ eval "use Unicode::MapUTF8 qw(from_utf8);";
 if ( $@ ) {
     # No Unicode::MapUTF8
     like($german,
-	 qr/m..chte.*Zigaretten.*bereinstimmungen/,
+	 qr/m..chte.*Zigaretten.*(bereinstimmungen|Gleichem)/,
 	 "Lingua::Translate->translate [en -> de]");
 
     # "skip" doesn't seem to be reliable
@@ -27,7 +27,7 @@ if ( $@ ) {
 } else {
 
     like(from_utf8({-string=>$german, -charset=>"ISO-8859-1"}),
-	 qr/m.chte.*Zigaretten.*.bereinstimmungen/,
+	 qr/m.chte.*Zigaretten/,
 	 "Lingua::Translate->translate [en -> de]");
 
     # test Unicode

@@ -2,7 +2,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     'NAME'		=> 'Lingua::Translate',
-    'VERSION'	        => 0.03,
+    'VERSION'	        => 0.05,
     'PREREQ_PM'		=> {
 			    LWP::UserAgent => 1.73,
 			    Pod::Constants => 0.15,

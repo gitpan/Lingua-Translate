@@ -308,6 +308,7 @@ sub agent {
     unless ( $self->{ua} ) {
 	$self->{ua} = LWP::UserAgent->new();
 	$self->{ua}->agent($self->{agent});
+	$self->{ua}->env_proxy();
     }
 
     $self->{ua};
@@ -341,6 +342,9 @@ sub config {
 	    # set the Babelfish URI
 	    ($self->{babelfish_uri} = $value) =~ m/\?(.*&)?$/
 		or croak "Babelfish URI `$value' not a query URI";
+
+	} elsif ( $option eq "ua" ) {
+	    $self->{ua} = $value;
 
 	} elsif ( $option eq "agent" ) {
 

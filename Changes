@@ -1,5 +1,13 @@
 Revision history for Perl extension Lingua::Translate.
 
+0.05  Wed Jun  5 09:55:52 BST 2002
+    - Added call to LWP::UserAgent->env_proxy() to automatically pick
+      up firewall configuration specified in environment.  Spotted by
+      Mark Brunner :-))
+
+0.04  Wed May  8 15:49:26 BST 2002
+    - bug fix - the "ua" option with Babelfish back-end didn't work
+
 0.03  Tue Apr  9 17:45:22 BST 2002
     - Added character set support
     - Now compatible with perl 5.005
