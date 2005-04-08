@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 use Test::More tests => 4;
 
 use_ok("Lingua::Translate::Babelfish");
@@ -24,3 +25,5 @@ eval {
 };
 
 like($@, qr/Bad hostname|Request timed out/, "dies with bad URI");
+
+

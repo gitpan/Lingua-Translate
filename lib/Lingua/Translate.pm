@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use vars qw($VERSION $defaults);
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 =head1 NAME
 
@@ -376,21 +376,7 @@ J. Urist <durist@world.std.com>
 
 =head1 AUTHOR
 
-Sam Vilain, <enki@snowcra.sh>
-
-=head1 MODULE RELEASE
-
-This is Lingua::Translate, version 0.07
-
-=head2 DEPENDENCIES
-
-This module requires the following modules and versions:
-
-   LWP::UserAgent   => 1.73
-   Pod::Constants   => 0.15
-   HTML::TokeParser => 2.19
-   I18N::LangTags   => 0.27
-   Unicode::MapUTF8 => 1.09
+Sam Vilain, <samv@cpan.org>
 
 =cut
 

@@ -1,6 +1,5 @@
 Changes
 Makefile.PL
-Makefile.cfg
 MANIFEST
 README
 lib/Lingua/Translate.pm
@@ -9,9 +8,4 @@ lib/Lingua/Translate/SysTran.pm
 t/01-babelfish.t
 t/02-translate.t
 t/03-systran.t
-debian/README.Debian
-debian/changelog
-debian/control
-debian/copyright
-debian/rules
 META.yml                                 Module meta-data (added by MakeMaker)

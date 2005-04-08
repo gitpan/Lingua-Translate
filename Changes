@@ -1,5 +1,9 @@
 Revision history for Perl extension Lingua::Translate.
 
+0.08  Fri Apr  8 13:47:03 CST 2005
+    - Now tests Chinese and Portugese translations
+    - removed crufty Makefile.cfg system
+
 0.07  Wed Nov 17 10:46:49 NZDT 2004
     - Now supports new Babelfish site design
 

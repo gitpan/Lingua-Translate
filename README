@@ -1,4 +1,4 @@
-Lingua::Translate version 0.07
+Lingua::Translate version 0.08
 ==============================
 
 This module performs natural language translation using Babelfish
@@ -10,26 +10,16 @@ not this is a bug :-).  Given that most users won't have a configured
 SysTran server available, the test script for that works in a
 different way and doesn't have the same problem.
 
-INSTALLATION ON A DEBIAN SYSTEM
+Note: this module hasn't been tested with the real version of the
+SysTrans translation software in a long time, it is quite possible
+that the software has changed in an incompatible way since this module
+was written.  In particular, the server at the time assumed an
+ISO-8859-1 character encoding, so won't work with non-European
+languages.  However, the babelfish server works fine.
 
-To build this tarball into a debian package:
+INSTALLATION
 
- 1. Ensure you have a build environment; run the following command as
-    root
-
-    apt-get install build-essential fakeroot
-
- 2. Build the package; this may/should be done as a normal user
-
-    dpkg-buildpackage -b -uc -rfakeroot
-
- 3. Install the generated package
-
-    dpkg -i ../liblingua-translate-perl_0.07_all.deb
-
-INSTALLATION ON OTHER SYSTEMS
-
-To install this module on other systems, type the following:
+To install this module, type the following:
 
    perl Makefile.PL
    make
@@ -57,6 +47,6 @@ ISO-8859-1.
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2002, 2004, Sam Vilain.  All rights reserved.  This
-module is free software; you may use it under the same terms as Perl
-itself.
+Copyright (c) 2002, 2004, 2005, Sam Vilain.  All rights reserved.
+This module is free software; you may use it under the same terms as
+Perl itself.
