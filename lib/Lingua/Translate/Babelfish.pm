@@ -36,7 +36,7 @@ Lingua::Translate::Babelfish - Translation back-end for Altavista's
      (
        backend => "Babelfish",
        babelfish_uri =>
-           'http://babelfish.altavista.com/tr?',
+           'http://babelfish.yahoo.com/translate_txt',
        ua => LWP::UserAgent->new(),
      );
 
@@ -158,17 +158,17 @@ sub translate {
 
   CHUNK:
     for my $chunk ( @chunks ) {
-
 	# make a new request object
 	my $req = POST ($self->{babelfish_uri},
 			[
 			 'doit' => 'done',
 			 'intl' => '1',
-			 #'tt' => 'urltext',
+			 'tt' => 'urltext',
 			 'trtext' => $chunk,
 			 'lp' => join("_", @{$self}{qw(src dest)}),
 			 'Submit' => 'Translate',
-			 'enc' => 'utf8',
+			 'ei' => 'UTF-8',
+			 'fr' => 'bf-res',
 			]);
 
 	$req->header("Accept-Charset", "utf-8");
@@ -220,8 +220,8 @@ sub _extract_text {
     my($self, $html, $contenttype) = @_;
 
     my ($translated) =
-	($html =~ m{<td \s bgcolor=white[^>]*>
-		    (?:<div \s style=padding:10px;>)?
+	($html =~ m{<div \s id="result[^>]*>
+		    (?:<div \s style="padding:0.6em;">)?
 		    ([^<]*)</}xs)
 	    or die "Babelfish response unparsable, brain needed";
 
@@ -371,7 +371,7 @@ sub config {
 The uri to use when contacting Babelfish.
 
 The default value is
-"http://babelfish.altavista.com/tr?"
+"http://babelfish.yahoo.com/translate_txt?"
 
 =item agent
 
